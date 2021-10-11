@@ -10,8 +10,8 @@ import UIKit
 import AVFoundation
 import PhotosUI
 
-class ViewController: UIViewController {
-//MARK: - Properties
+class MainViewController: UIViewController, AVCapturePhotoCaptureDelegate {
+    //MARK: - Properties
     
     var previewView : UIView!
     var boxView:UIView!
@@ -27,19 +27,19 @@ class ViewController: UIViewController {
     private let photoOutput = AVCapturePhotoOutput()
     
     let photoImageView: UIImageView = {
-            let imageView = UIImageView(frame: .zero)
-            imageView.contentMode = .scaleAspectFill
-            imageView.clipsToBounds = true
-            return imageView
-        }()
-
-
-//MARK: - Actions
-
+        let imageView = UIImageView(frame: .zero)
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
+    
+    //MARK: - Actions
+    
     //at the bottom, as an extension
-
-//MARK: - Life cycle
-
+    
+    //MARK: - Life cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         previewView = UIView(frame: CGRect(x: 0,
@@ -66,6 +66,13 @@ class ViewController: UIViewController {
         
         self.setupAVCapture()
         
+        
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { [unowned self] (status) in
+            DispatchQueue.main.async { [unowned self] in
+                showUI(for: status)
+            }
+        }
+        
     }
     
     
@@ -90,7 +97,7 @@ class ViewController: UIViewController {
 //MARK: - Helper
 
 // AVCaptureVideoDataOutputSampleBufferDelegate protocol and related methods
-extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
+extension MainViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
     func setupAVCapture(){
         session.sessionPreset = AVCaptureSession.Preset.vga640x480
         guard let device = AVCaptureDevice
@@ -141,7 +148,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
             print("error: \(error.localizedDescription)")
         }
     }
-
+    
     
     // clean up AVCapture
     func stopCamera(){
@@ -152,7 +159,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
 
 
 //set up capture session
-extension ViewController{
+extension MainViewController{
     
     private func setupCaptureSession() {
         let captureSession = AVCaptureSession()
@@ -184,7 +191,7 @@ extension ViewController{
 
 
 //to capture photo
-extension ViewController{
+extension MainViewController{
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // do stuff here
         let photoSettings = AVCapturePhotoSettings()
@@ -194,19 +201,19 @@ extension ViewController{
         }
     }
     
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        guard let imageData = photo.fileDataRepresentation() else { return }
-        let previewImage = UIImage(data: imageData)
-        
-        let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
-        photoPreviewContainer.photoPreviewView.image = previewImage
-        self.view.addSubview(photoPreviewContainer)
-    }
+    //    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+    //        guard let imageData = photo.fileDataRepresentation() else { return }
+    //        let previewImage = UIImage(data: imageData)
+    //
+    //        var photoPreviewContainer1 = photoPreviewContainer(frame: self.view.frame)
+    //        photoPreviewContainer1.photoPreviewView.image = previewImage
+    //        self.view.addSubview(photoPreviewContainer1)
+    //    }
 }
 
 
 //to save photo in library
-extension ViewController {
+extension MainViewController {
     @objc private func handleSavePhoto() {
         guard let previewImage = self.photoImageView.image else { return }
         
@@ -225,10 +232,43 @@ extension ViewController {
             }
         }
         
-//        PHPhotoLibrary.requestAuthorization(for: .readWrite) { [unowned self] (status) in
-//            DispatchQueue.main.async { [unowned self] in
-//                showUI(for: status)
-//            }
-//        }
+    }
+    
+    //in viewDidLoaded()
+    func showUI(for status: PHAuthorizationStatus) {
+        switch status {
+        case .authorized:
+            showFullAccessUI()
+            
+        case .limited:
+//            showLimittedAccessUI()
+            print("status is .limited")
+
+        case .restricted:
+//            showRestrictedAccessUI()
+            print("status is .restricted")
+
+        case .denied:
+//            showAccessDeniedUI()
+            print("status is .denied")
+
+        case .notDetermined:
+            break
+            
+        @unknown default:
+            break
+        }
+    }
+    
+    
+    //need to arrange the buttons, or make the ui as I want
+    //but do I have to divide codes into files?
+    //need to sort codes as its usage
+    func showFullAccessUI() {
+        manageButton.isHidden = true
+        seeAllButton.isHidden = true
+        
+        let photoCount = PHAsset.fetchAssets(with: nil).count
+        infoLabel.text = "Status: authorized\nPhotos: \(photoCount)"
     }
 }
