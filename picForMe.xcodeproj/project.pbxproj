@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		302F46ED1C50889472A6CC0F /* Pods_picForMe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AFB014C3B4DF99662695CA1 /* Pods_picForMe.framework */; };
 		E3B85161270E94F700748D94 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B85160270E94F700748D94 /* AppDelegate.swift */; };
 		E3B85163270E94F700748D94 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B85162270E94F700748D94 /* SceneDelegate.swift */; };
 		E3B85165270E94F700748D94 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B85164270E94F700748D94 /* MainViewController.swift */; };
@@ -17,6 +18,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1AFB014C3B4DF99662695CA1 /* Pods_picForMe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_picForMe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BCB168C7CCD99224B4D603E /* Pods-picForMe.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-picForMe.release.xcconfig"; path = "Target Support Files/Pods-picForMe/Pods-picForMe.release.xcconfig"; sourceTree = "<group>"; };
+		C12A38F8497FD2DB39551855 /* Pods-picForMe.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-picForMe.debug.xcconfig"; path = "Target Support Files/Pods-picForMe/Pods-picForMe.debug.xcconfig"; sourceTree = "<group>"; };
 		E3B8515D270E94F700748D94 /* picForMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = picForMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3B85160270E94F700748D94 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E3B85162270E94F700748D94 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -33,17 +37,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				302F46ED1C50889472A6CC0F /* Pods_picForMe.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4307C19527F89331083946C5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1AFB014C3B4DF99662695CA1 /* Pods_picForMe.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E3B85154270E94F700748D94 = {
 			isa = PBXGroup;
 			children = (
 				E3B8515F270E94F700748D94 /* picForMe */,
 				E3B8515E270E94F700748D94 /* Products */,
+				EF21AB0F557AEB9846483ABD /* Pods */,
+				4307C19527F89331083946C5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -70,6 +85,16 @@
 			path = picForMe;
 			sourceTree = "<group>";
 		};
+		EF21AB0F557AEB9846483ABD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C12A38F8497FD2DB39551855 /* Pods-picForMe.debug.xcconfig */,
+				3BCB168C7CCD99224B4D603E /* Pods-picForMe.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -77,9 +102,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E3B85174270E94F800748D94 /* Build configuration list for PBXNativeTarget "picForMe" */;
 			buildPhases = (
+				C9BCCC1B2A6A996A428FB09C /* [CP] Check Pods Manifest.lock */,
 				E3B85159270E94F700748D94 /* Sources */,
 				E3B8515A270E94F700748D94 /* Frameworks */,
 				E3B8515B270E94F700748D94 /* Resources */,
+				238E646BF79088F968FAF63F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -134,6 +161,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		238E646BF79088F968FAF63F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-picForMe/Pods-picForMe-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-picForMe/Pods-picForMe-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-picForMe/Pods-picForMe-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C9BCCC1B2A6A996A428FB09C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-picForMe-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E3B85159270E94F700748D94 /* Sources */ = {
@@ -287,6 +356,7 @@
 		};
 		E3B85175270E94F800748D94 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C12A38F8497FD2DB39551855 /* Pods-picForMe.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -306,6 +376,7 @@
 		};
 		E3B85176270E94F800748D94 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3BCB168C7CCD99224B4D603E /* Pods-picForMe.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

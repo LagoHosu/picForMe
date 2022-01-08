@@ -16,6 +16,7 @@ class MainViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     var previewView : UIView!
     var boxView:UIView!
     let myButton: UIButton = UIButton()
+    let flipButton: UIButton = UIButton()
     
     //Camera Capture requiered properties
     var videoDataOutput: AVCaptureVideoDataOutput!
@@ -23,6 +24,9 @@ class MainViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     var previewLayer:AVCaptureVideoPreviewLayer!
     var captureDevice : AVCaptureDevice!
     let session = AVCaptureSession()
+    
+    var usingFrontCamera = false
+
     
     private let photoOutput = AVCapturePhotoOutput()
     
@@ -58,11 +62,23 @@ class MainViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         myButton.setTitle("press me", for: .normal)
         myButton.setTitleColor(UIColor.white, for: .normal)
         myButton.layer.cornerRadius = 20.0
-        myButton.layer.position = CGPoint(x: self.view.frame.width/2, y:200)
+        myButton.layer.position = CGPoint(x: self.view.frame.width/2, y:470)
         myButton.addTarget(self, action: #selector(self.onClickMyButton(sender:)), for: .touchUpInside)
+        
+        flipButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        flipButton.backgroundColor = UIColor.white
+//        flipButton.image(for: <#T##UIControl.State#>)
+        flipButton.layer.masksToBounds = true
+        flipButton.setTitle("flip!", for: .normal)
+        flipButton.setTitleColor(UIColor.black, for: .normal)
+        flipButton.layer.cornerRadius = 20.0
+        flipButton.layer.position = CGPoint(x: self.view.frame.width*3/4, y:50)
+        flipButton.addTarget(self, action: #selector(self.onClickFlipButton(sender:)), for: .touchUpInside)
+        
         
         view.addSubview(boxView)
         view.addSubview(myButton)
+        view.addSubview(flipButton)
         
         self.setupAVCapture()
         
@@ -90,8 +106,18 @@ class MainViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
     }
     
+    //when press button selected
     @objc func onClickMyButton(sender: UIButton){
         print("button pressed")
+        //make the picture saved
+        //will you make this auto-save or check it right away?_save directly for now
+        handleSavePhoto()
+    }
+    
+    //when flip button selected
+    @objc func onClickFlipButton(sender: UIButton){
+        print("flip button pressed")
+        changeCamera()
     }
     
     
@@ -236,46 +262,6 @@ extension MainViewController {
         }
         
     }
-    
-    /*
-    //in viewDidLoaded()
-    func showUI(for status: PHAuthorizationStatus) {
-        switch status {
-        case .authorized:
-            showFullAccessUI()
-            
-        case .limited:
-//            showLimittedAccessUI()
-            print("status is .limited")
-
-        case .restricted:
-//            showRestrictedAccessUI()
-            print("status is .restricted")
-
-        case .denied:
-//            showAccessDeniedUI()
-            print("status is .denied")
-
-        case .notDetermined:
-            break
-            
-        @unknown default:
-            break
-        }
-    }
-    
-    
-    //need to arrange the buttons, or make the ui as I want
-    //but do I have to divide codes into files?
-    //need to sort codes as its usage
-    func showFullAccessUI() {
-        manageButton.isHidden = true
-        seeAllButton.isHidden = true
-        
-        let photoCount = PHAsset.fetchAssets(with: nil).count
-        infoLabel.text = "Status: authorized\nPhotos: \(photoCount)"
-    }
-     */
      
 }
 
@@ -304,5 +290,39 @@ extension MainViewController {
                 break
             }
         })
+    }
+    
+    
+}
+
+//to flip the camera
+extension MainViewController {
+    func getFrontCamera() -> AVCaptureDevice?{
+        return AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .front).devices.first
+//        return nil
+    }
+
+    func getBackCamera() -> AVCaptureDevice?{
+        return AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back).devices.first
+//        return nil
+    }
+    
+    
+    
+    private func changeCamera() {
+        usingFrontCamera = !usingFrontCamera
+        do{
+            session.removeInput(session.inputs.first!)
+
+            if(usingFrontCamera){
+                captureDevice = getFrontCamera()
+            }else{
+                captureDevice = getBackCamera()
+            }
+            let captureDeviceInput1 = try AVCaptureDeviceInput(device: captureDevice)
+            session.addInput(captureDeviceInput1)
+        }catch{
+            print(error.localizedDescription)
+        }
     }
 }
