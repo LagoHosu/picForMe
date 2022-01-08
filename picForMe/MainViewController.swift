@@ -17,6 +17,8 @@ class MainViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     var boxView:UIView!
     let myButton: UIButton = UIButton()
     let flipButton: UIButton = UIButton()
+    let flashButton: UIButton = UIButton()
+
     
     //Camera Capture requiered properties
     var videoDataOutput: AVCaptureVideoDataOutput!
@@ -75,11 +77,21 @@ class MainViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         flipButton.layer.position = CGPoint(x: self.view.frame.width*3/4, y:50)
         flipButton.addTarget(self, action: #selector(self.onClickFlipButton(sender:)), for: .touchUpInside)
         
+        flashButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        flashButton.backgroundColor = UIColor.white
+//        flashButton.image(for: <#T##UIControl.State#>)
+        flashButton.layer.masksToBounds = true
+        flashButton.setTitle("flash", for: .normal)
+        flashButton.setTitleColor(UIColor.black, for: .normal)
+        flashButton.layer.cornerRadius = 20.0
+        flashButton.layer.position = CGPoint(x: self.view.frame.width*1/4, y:50)
+        flashButton.addTarget(self, action: #selector(self.onClickFlashButton(sender:)), for: .touchUpInside)
         
         view.addSubview(boxView)
         view.addSubview(myButton)
         view.addSubview(flipButton)
-        
+        view.addSubview(flashButton)
+
         self.setupAVCapture()
         
         requestGalleryPermission()
@@ -118,6 +130,13 @@ class MainViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @objc func onClickFlipButton(sender: UIButton){
         print("flip button pressed")
         changeCamera()
+    }
+    
+    
+    //when flash button selected
+    @objc func onClickFlashButton(sender: UIButton){
+        print("flash button pressed")
+        toggleFlash()
     }
     
     
@@ -299,14 +318,11 @@ extension MainViewController {
 extension MainViewController {
     func getFrontCamera() -> AVCaptureDevice?{
         return AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .front).devices.first
-//        return nil
     }
 
     func getBackCamera() -> AVCaptureDevice?{
         return AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back).devices.first
-//        return nil
     }
-    
     
     
     private func changeCamera() {
@@ -323,6 +339,32 @@ extension MainViewController {
             session.addInput(captureDeviceInput1)
         }catch{
             print(error.localizedDescription)
+        }
+    }
+}
+
+
+extension MainViewController {
+    func toggleFlash() {
+        guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return }
+        guard device.hasTorch else { return }
+
+        do {
+            try device.lockForConfiguration()
+
+            if (device.torchMode == AVCaptureDevice.TorchMode.on) {
+                device.torchMode = AVCaptureDevice.TorchMode.off
+            } else {
+                do {
+                    try device.setTorchModeOn(level: 1.0)
+                } catch {
+                    print(error)
+                }
+            }
+
+            device.unlockForConfiguration()
+        } catch {
+            print(error)
         }
     }
 }
